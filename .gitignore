@@ -1,4 +1,4 @@
-*.pickle
-*.json
 venv/
 *.pyc
+token.pickle
+credentials.json
