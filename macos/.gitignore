@@ -4,3 +4,4 @@
 *.pyc
 .pickle
 venv/
+try.py

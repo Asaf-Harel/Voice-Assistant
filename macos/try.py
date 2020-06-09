@@ -8,8 +8,6 @@ class MyWindow(QMainWindow):
         super(MyWindow, self).__init__()
         self.initUI()
 
-    def initUI(self):
-
 
 def clicked():
     print("clicked")
