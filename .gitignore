@@ -1,6 +1,7 @@
+.DS_Store
 venv/
 *.pyc
 macos/token.pickle
+windows/token.pickle
 macos/credentials.json
 windows/credentials.json
-windows/token.pickle
