@@ -1,20 +1,24 @@
 from google_calendar import authenticate_google, get_events, get_date
 from speech import speak, get_audio, set_voice, get_voice
+from search import search_google
 from notes import note
-from time import sleep
+from time import sleep, strftime
 import subprocess
 
 SERIVCE = authenticate_google()
 
 CALENDAR_STRS = ["what do i have", "what do i do",
                  "do i have plans", "am i busy"]
-NOTE_STRS = ["make a note", "write this down", "remember this"]
+
+NOTE_STRS = ["make a note", "write this down", "remember this", "note this"]
 
 AGREEMENT_STRS = ["yes", "of course", "sure", "why not", "forever"]
 DISAGREEMENT_STRS = ["no", "never", "quit", "go away", "exit"]
 
 OPEN_STRS = ["open", "start", "execute", "launch"]
 
+SEARCH_STRS = ["search for", "search to",
+               "search", "look up", "look for", "look", "find out", "find", "what is", "investigate", "research for", "research"]
 again = None
 
 try:
@@ -93,6 +97,14 @@ try:
                     speak("Hello sir, this is jarvis")
                     understand = True
 
+                elif "time" in text:
+                    speak(f"It's {strftime('%H:%M')} O'clock")
+                    understand = True
+
+                elif "date" in text:
+                    speak(f"The date today is {strftime('%d-%m-%Y')}")
+                    understand = True
+
                 for phrase in CALENDAR_STRS:
                     if phrase in text:
                         date = get_date(text)
@@ -101,6 +113,12 @@ try:
                         else:
                             speak("I couldn't understand the date")
                         understand = True
+
+                for phrase in SEARCH_STRS:
+                    if phrase in text:
+                        search_google(text[len(phrase) + 1:])
+                        understand = True
+                        break
 
                 for phrase in NOTE_STRS:
                     if phrase in text:
