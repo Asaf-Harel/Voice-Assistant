@@ -1,4 +1,6 @@
 venv/
 *.pyc
-token.pickle
-credentials.json
+macos/token.pickle
+macos/credentials.json
+windows/credentials.json
+windows/token.pickle
