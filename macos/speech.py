@@ -5,6 +5,7 @@ import subprocess
 import datetime
 
 voice = 'Tom'
+speed = '160'
 
 
 def set_voice(name: str):
@@ -16,8 +17,19 @@ def get_voice():
     return voice
 
 
+def set_speech_rate(rate):
+    global speed
+    speed = str(rate)
+
+
 def speak(text):
-    subprocess.call(['say', '-v', voice, '-r 160', text])
+    if get_voice() == 'Tom':
+        assistant = 'Jarvis'
+    else:
+        assistant = 'Friday'
+
+    print('\033[92m' + assistant + ':', text + '\033[0m')
+    subprocess.call(['say', '-v', voice, '-r' + speed, text])
 
 
 def get_audio():
@@ -29,7 +41,7 @@ def get_audio():
 
         try:
             said = r.recognize_google(audio)
-            print(said)
+            print('\033[94m' + 'You:', said + '\033[0m')
         except Exception as e:
             print(f"Exception: {e}")
 

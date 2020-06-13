@@ -6,14 +6,14 @@
 * Press ⌘ + space - to open spotlight
 * Search and open Terminal
 * Execute:<br>
-`git clone execute - git clone https://github.com/Asaf-Harel/Voice-Assistant.git`
+`git clone https://github.com/Asaf-Harel/Voice-Assistant.git`
 * cd macos/
 
 ### Windows
 * Press Windows key
 * Search and open "cmd"
 * Execute:<br>
-`git clone execute - git clone https://github.com/Asaf-Harel/Voice-Assistant.git`
+`git clone https://github.com/Asaf-Harel/Voice-Assistant.git`
 * cd windows/
 
 <br>
@@ -25,6 +25,7 @@
 
 ### Windows
 `venv\Scripts\activate.bat`
+`pip install -r requirements.txt`
 
 <br>
 
