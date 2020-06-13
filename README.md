@@ -31,3 +31,23 @@
 
 ## Run The Voice Assistant
 `python main.py`
+<br>
+To wake up the assistant say - "Hello Jarvis"
+ 
+---
+## Main Commands
+**switch to friday**  - switch to female voice<br>
+**switch to jarvis** - switch to male voice<br>
+**what time is it?** - Say current time<br>
+**what is the date** today - Say today date<br>
+**Turn on/off WiFi** - Turn on or off wifi<br>
+**Turn on/off bluetooth** - Turn on or off blutooth<br>
+**Increase volume by [number]** - Increase volume by number<br>
+**Decrease volume by [number]** - Decrease volume by number<br>
+**Increase brightness by [number]** - Increase brightness by number<br>
+**Decrease brightness by [number]** - Decrease brightness by number<br>
+**What do I have [date]** - Show your events from google calendar<br>
+**Search [something]** - Google something<br>
+**Make a note** - Make a note of something
+**Do you know some good [genre] movies?** - Recommend movies
+

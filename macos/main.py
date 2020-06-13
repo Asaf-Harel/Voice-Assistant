@@ -95,11 +95,6 @@ try:
                     speak("Asaf is the most smart man I've ever met")
                     understand == True
 
-                elif "who is yuval" in text:
-                    speak(
-                        "Rader is a huge... I mean... giant... I mean... really really really really really big!... piece of shit")
-                    understand = True
-
                 elif "switch to friday" in text:
                     set_voice('Samantha')
                     speak("Hi sir, this is friday")
