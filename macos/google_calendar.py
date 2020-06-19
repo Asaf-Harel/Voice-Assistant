@@ -76,6 +76,8 @@ def get_events(day, service):
 
 
 def add_event():
+    service = authenticate_google()
+
     event = {
         'summary': 'Google I/O 2015',
         'location': '800 Howard St., San Francisco, CA 94103',
@@ -91,10 +93,6 @@ def add_event():
         'recurrence': [
             'RRULE:FREQ=DAILY;COUNT=2'
         ],
-        'attendees': [
-            {'email': 'lpage@example.com'},
-            {'email': 'sbrin@example.com'},
-        ],
         'reminders': {
             'useDefault': False,
             'overrides': [
@@ -104,8 +102,7 @@ def add_event():
         },
     }
 
-    event = authenticate_google().events().insert(
-        calendarId='primary', body=event).execute()
+    event = service.events().insert(calendarId='primary', body=event).execute()
     print('Event created: %s' % (event.get('htmlLink')))
 
 
@@ -162,3 +159,6 @@ def get_date(text):
         return None
 
     return datetime.date(month=month, day=day, year=year)
+
+
+add_event()

@@ -59,6 +59,12 @@ def turn_wifi(state: bool):
                          "airport", "off"], stdout=subprocess.PIPE)
 
 
+def check_ethernet():
+    command = subprocess.run("ifconfig", stdout=subprocess.PIPE, shell=True)
+    text = command.stdout.strip().decode("ascii")
+    print(text)
+
+
 def turn_bluetooth(state: bool):
     """Turn on and off bluetooth
 
@@ -69,3 +75,6 @@ def turn_bluetooth(state: bool):
         subprocess.call(["blueutil", "-p", "1"])
     else:
         subprocess.call(["blueutil", "-p", "0"])
+
+
+check_ethernet()
