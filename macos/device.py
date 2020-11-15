@@ -1,4 +1,6 @@
 import subprocess
+import os
+from speech import get_voice
 
 
 def set_volume(volume: int):
@@ -54,15 +56,11 @@ def turn_wifi(state: bool):
     if state:
         subprocess.call(["networksetup", "-setairportpower",
                          "airport", "on"], stdout=subprocess.PIPE)
+        notify("Turned On WiFi")
     else:
         subprocess.call(["networksetup", "-setairportpower",
                          "airport", "off"], stdout=subprocess.PIPE)
-
-
-def check_ethernet():
-    command = subprocess.run("ifconfig", stdout=subprocess.PIPE, shell=True)
-    text = command.stdout.strip().decode("ascii")
-    print(text)
+        notify("Turned Off WiFi")
 
 
 def turn_bluetooth(state: bool):
@@ -73,8 +71,41 @@ def turn_bluetooth(state: bool):
     """
     if state:
         subprocess.call(["blueutil", "-p", "1"])
+        notify("Turned On Bluetooth")
+
     else:
         subprocess.call(["blueutil", "-p", "0"])
+        notify("Turned Off Bluetooth")
 
 
-check_ethernet()
+def notify(title="", subtitle="", msg="", sound=None, url=None):
+    if get_voice() == "Jarvis":
+        icon = "icons/jarvis-icon.png"
+    elif get_voice() == "Friday":
+        icon = "icons/friday-icon.png"
+
+    if sound and url:
+        subprocess.call(["terminal-notifier", "-title",
+                         f'"{title}"', "-subtitle", f'"{subtitle}"', "-message", f'"{msg}"', "-appIcon", icon, "-sound", sound, "-open", f'"{url}"'])
+    elif sound:
+        subprocess.call(["terminal-notifier", "-title",
+                         f'"{title}"', "-subtitle", f'"{subtitle}"', "-message", f'"{msg}"', "-appIcon", icon, "-sound", sound])
+    elif url:
+        subprocess.call(["terminal-notifier", "-title",
+                         f'"{title}"', "-subtitle", f'"{subtitle}"', "-message", f'"{msg}"', "-appIcon", icon, "-open", f'"{url}"'])
+    else:
+        subprocess.call(["terminal-notifier", "-title",
+                         f'"{title}"', "-subtitle", f'"{subtitle}"', "-message", f'"{msg}"', "-appIcon", icon])
+
+
+def open_app(app_name):
+    subprocess.call(['open', f'/Applications/{app_name}'])
+
+
+def hide(app_name):
+    os.system(
+        f"""osascript -e 'tell application "System Events" to set visible of process "{app_name}" to false'""")
+
+
+def quit(app_name):
+    subprocess.call(['pkill', app_name])

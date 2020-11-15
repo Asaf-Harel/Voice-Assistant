@@ -4,6 +4,7 @@ import speech_recognition as sr
 import subprocess
 import datetime
 
+
 voice = 'Tom'
 speed = '160'
 
@@ -14,7 +15,10 @@ def set_voice(name: str):
 
 
 def get_voice():
-    return voice
+    if voice == 'Tom':
+        return "Jarvis"
+    elif voice == "Samantha":
+        return "Friday"
 
 
 def set_speech_rate(rate):
@@ -23,10 +27,7 @@ def set_speech_rate(rate):
 
 
 def speak(text):
-    if get_voice() == 'Tom':
-        assistant = 'Jarvis'
-    else:
-        assistant = 'Friday'
+    assistant = get_voice()
 
     print('\033[92m' + assistant + ':', text + '\033[0m')
     subprocess.call(['say', '-v', voice, '-r' + speed, text])
@@ -36,6 +37,7 @@ def get_audio():
     r = sr.Recognizer()
 
     with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
         audio = r.listen(source)
         said = ""
 
@@ -45,7 +47,7 @@ def get_audio():
         except Exception as e:
             print(f"Exception: {e}")
 
-    return said.lower()
+    return said
 
 
 def record():

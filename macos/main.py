@@ -2,28 +2,30 @@ from google_calendar import authenticate_google, get_events, get_date
 from speech import speak, get_audio, set_voice, get_voice, set_speech_rate
 from search import search_google, search_imdb, search_movie
 from notes import note
-from device import turn_wifi, turn_bluetooth, set_volume, get_volume, set_brightness, get_brightness
+from device import turn_wifi, turn_bluetooth, set_volume, get_volume, set_brightness, get_brightness, notify, hide, quit, open_app
 from time import sleep, strftime
 import subprocess
 import random
 
 SERIVCE = authenticate_google()
 
-GREETINGS = ['I am listening', 'Hello sir', 'what?! what?! whaat?!', 'How can I help you',
-             'Really? again? what now?', 'aye aye captain', "Oh hey, didn't see you there"]
+GREETINGS = ['I am listening', 'Hello sir', 'what?!...... what?!...... whaaaaaaat?!?!', 'How can I help you?',
+             'Really?... again?... what now?!', 'aye aye captain', "Oh hey, didn't see you there"]
 
 GOODBYES = ['Goodbye sir', 'see ya later man',
-            'Finally!... sayonara!', "That's it? bye bye"]
+            'Finally!... sayonara!', "That's it?!... bye bye"]
 
 CALENDAR_STRS = ["what do i have", "what do i do",
-                 "do i have plans", "am i busy"]
+                 "do i have plans", "am i busy", "do i do"]
 
 NOTE_STRS = ["make a note", "write this down", "remember this", "note this"]
 
 AGREEMENT_STRS = ["yes", "of course", "sure", "why not", "forever"]
 DISAGREEMENT_STRS = ["no", "nope", "never", "quit", "go away", "exit"]
 
-OPEN_STRS = ["open", "start", "execute", "launch"]
+OPEN_STRS = ["open", "start", "execute", "launch", "show"]
+MINIMIZE_STRS = ["minimize", "hide"]
+QUIT_STRS = ["quit", "close"]
 
 SEARCH_STRS = ["search for", "search", "look up", "look for", "look", "find out",
                "find", "what is", "investigate", "research for", "research about", "research"]
@@ -37,25 +39,26 @@ again = None
 try:
     while True:
         print("Listening")
-        text = get_audio()
+        text = get_audio().lower()
         understand = False
 
-        if get_voice() == "Tom":
+        if get_voice() == "Jarvis":
             WAKE0 = "hello jarvis"
             WAKE1 = "hey jarvis"
             WAKE2 = "hi jarvis"
-        elif get_voice() == "Samantha":
+        elif get_voice() == "Friday":
             WAKE0 = "hello friday"
             WAKE1 == "hey friday"
             WAKE2 == "hi friday"
 
         if text.count(WAKE0) > 0 or text.count(WAKE1) or text.count(WAKE2):
+            notify("Assistant Activated!")
             speak(random.choice(GREETINGS))
 
             while True:
                 if again:
                     speak("Do you want something else?")
-                    text = get_audio()
+                    text = get_audio().lower()
                     for phrase in DISAGREEMENT_STRS:
                         if phrase in text:
                             speak(random.choice(GOODBYES))
@@ -69,24 +72,25 @@ try:
                     if not again:
                         break
 
-                text = get_audio()
+                original_text = get_audio()
+                text = original_text.lower()
 
                 if "hello" in text:
                     speak("hello, how are you today?")
                     understand = True
 
                 elif "your" in text and "name" in text:
-                    if get_voice() == "Tom":
+                    if get_voice() == "Jarvis":
                         speak("My name is Jarvis")
-                    elif get_voice() == "Samantha":
+                    elif get_voice() == "Friday":
                         speak("My name is Friday")
                     understand = True
 
                 elif "who are you" == text or "tell me about you" == text:
-                    if get_voice() == "Tom":
+                    if get_voice() == "Jarvis":
                         speak(
                             "My name is Jarvis, I was Iron man virtual assistant but one day i thought... damn Asaf is way smarter... so now I'm his assistant")
-                    elif get_voice() == "Samantha":
+                    elif get_voice() == "Friday":
                         speak(
                             "My name is Friday, I was Iron man virtual assistant but one day i thought... damn Asaf is way smarter... so now I'm his assistant")
                     understand = True
@@ -97,11 +101,13 @@ try:
 
                 elif "switch to friday" in text:
                     set_voice('Samantha')
+                    notify("Switched to Friday")
                     speak("Hi sir, this is friday")
                     understand = True
 
                 elif "switch to jarvis" in text:
                     set_voice('Tom')
+                    notify("Switched to Jarvis")
                     speak("Hello sir, this is jarvis")
                     understand = True
 
@@ -160,7 +166,7 @@ try:
                         set_volume(volume)
                         speak(f"Increased volume by {num}%")
                         understand = True
-                    elif "decrease" in text or "reduce" in text or "subtract" in text:
+                    elif "decrease" in text or "reduce" in text or "subtract" in text or "lower" in text:
                         for i in text.split():
                             if "%" in i:
                                 i = i[:-1]
@@ -197,7 +203,7 @@ try:
                         set_brightness(brightness)
                         speak(f"Increased brightness by {num}%")
                         understand = True
-                    elif "decrease" in text or "reduce" in text or "subtract" in text:
+                    elif "decrease" in text or "reduce" in text or "subtract" in text or "lower" in text:
                         for i in text.split():
                             if "%" in i:
                                 i = i[:-1]
@@ -236,11 +242,50 @@ try:
 
                 for phrase in OPEN_STRS:
                     if phrase in text:
-                        app = list(text[len(phrase) + 1:])
-                        app[0] = app[0].upper()
-                        app = ''.join(app) + '.app'
+                        try:
+                            app = original_text[len(phrase) + 1:] + ".app"
+                            if app[0].islower():
+                                app = app[0].upper() + app[1:]
+                            print(app)
+                            open_app(app)
+                        except:
+                            break
+                        notify(f"Opened {app.split('.')[0]}")
+                        speak(f"Opened {app.split('.')[0]}")
+                        understand = True
+                        break
+
+                for phrase in MINIMIZE_STRS:
+                    if phrase in text:
+                        try:
+                            app = original_text[len(phrase) + 1:]
+                            if app[0].islower():
+                                app = app[0].upper() + app[1:]
+                            print(app)
+                            hide(app)
+                        except:
+                            break
+                        notify(f"Hid {app}")
+                        speak(f"Hid {app}")
+                        understand = True
+                        break
+
+                for phrase in QUIT_STRS:
+                    if phrase in text:
+                        app = original_text[len(phrase) + 1:]
+                        if app[0].islower():
+                            app = app[0].upper() + app[1:]
+                        if app == "":
+                            break
                         print(app)
-                        subprocess.call(['open', f'/Applications/{app}'])
+                        speak(f"Are you sure you want to close {app}?")
+                        answer = get_audio().lower()
+                        for agree in AGREEMENT_STRS:
+                            if agree in answer:
+                                quit(app)
+                                notify(f"Closed {app}")
+                                speak(f"Closed {app}")
+                                break
                         understand = True
                         break
 
@@ -266,11 +311,12 @@ try:
                         break
 
                 if not understand:
+                    notify("I didn't understand:", text)
                     speak("I didn't understand that")
 
                 again = True
                 understand = False
-        sleep(0.2)
+        sleep(0.1)
 
 except:
     speak('Goodbye sir')
